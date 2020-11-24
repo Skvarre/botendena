@@ -11,7 +11,7 @@ Nuvarande funktionalitet:
  !dbas 
  !dtek 
  !orka 
-
+ 
  Planerad funktionalitet:
--Kommando för att visa dagens schema
--Kommando för att visa deadlines
+ - Kommando för att visa dagens schema
+ - Kommando för att visa deadlines
