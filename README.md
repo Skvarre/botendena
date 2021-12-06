@@ -1,17 +1,13 @@
 # botendena
-Boten Dena v.0.1.2 
+Boten Dena v.2021/22 (LTS hehe skoja)
 
 Nuvarande funktionalitet: 
  - Påminnelse till Robin och Tim att ta kafferast vid 15. 
- - Ryter på Kevin ibland. 
  - Meddelar när en föreläsning börjar. 
+
  
  Kommandon: 
- !hjälp      !pip
- !dbas 
- !dtek 
- !orka 
- 
- Planerad funktionalitet:
- - Kommando för att visa dagens schema
- - Kommando för att visa deadlines
+ !hjälp      !adk
+ !schema
+ !os 
+ !hållut 

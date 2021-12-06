@@ -1,6 +1,6 @@
 const ical = require('node-ical')
 
-const events = ical.sync.parseFile('cdate2.ics')
+const events = ical.sync.parseFile('cdate3.ics')
 
 module.exports = {
 
@@ -46,6 +46,9 @@ module.exports = {
      /**
       * AUTOMATISERAD PÅMINNELSE
       * OM FÖRELÄSNING
+      * 
+      * Returnerar en lista med 
+      * Tiden för kronrutinen, lektionsinfo, 
       */
     remindFöreläsning : function(){
         var i = 0
@@ -53,9 +56,12 @@ module.exports = {
         const lections = []
         for (const event of Object.values(events)) {
             var type = event.summary.split(", ")
-            if(type[0] == "Föreläsning"){
+            console.log(event.summary)
+
+            if(type[0] == "Föreläsning" || type[0] == "Övning"){
             date = event.start.toISOString().substring(0,10)
             calendarHour = event.start.toISOString().substring(11,13)
+            //Change this line of code for hourly issues. Ideally go after the clock =) :O wtf man 
             calendarHour = parseInt(calendarHour)+1
             if(calendarHour < 10){
                 calendarHour = "0"+calendarHour
@@ -106,18 +112,47 @@ module.exports = {
         calenderMinute = calenderDate.substring(10,12)
         calenderSecond = calenderDate.substring(12,14)
         cronTime = calenderSecond + ' ' + calenderMinute + ' ' + calenderHour + ' ' + calenderDay + ' ' + calenderMonth + ' *'
+        console.log(closestLection)
+        type = closestLection.summary.split(", ")
+        console.log(type)
+        if(type[0] == "Föreläsning"){
+            var lecturetype = "föreläsning"
+        }else{
+            var lecturetype = "övning"
+        }
         lectureInfo =
-        'Nästa föreläsning börjar snart:\n' +
+        'Nästa ' + lecturetype + ' börjar snart:\n' +
         '\n' + closestLection.summary + 
         '\nInformation: ' + closestLection.description +
         '\nDatum: ' + svensktDatum(closestLection.start.toDateString()) +
         '\nTid: ' + closestLection.start.toTimeString() + '\n'
 
-        type = closestLection.summary.split(", ")
-        return [cronTime, lectureInfo, type[1]]
+
+        return [cronTime, lectureInfo, type[1], lecturetype]
    
+    },
+    dagensSchema : function(date){
+        var today = new Date()
+        today.setDate(today.getDate() + (date-1));
+        var dd = String(today.getDate()).padStart(2, '0')
+        var mm = String(today.getMonth() + 1).padStart(2, '0')
+        var yyyy = today.getFullYear()
+        date = parseInt(yyyy+mm+dd)
+        activity = svensktDatum(today.toDateString()) + "\n" + "------------------------------\n"
+        for (const event of Object.values(events)){
+            iterationDate = event.start.toISOString().substring(0,10)
+            newDate = iterationDate.split("-")
+            totDate = parseInt(newDate[0]+newDate[1]+newDate[2])
+            time = event.start.toTimeString().split(" ")
+            if(date == totDate){
+               activity += event.summary + "\n" + time[0] + "\n------------------------------\n" 
+            }
+        }
+        return activity
     }
 }
+
+
 /**
  * Convert to swedish date format
  */
